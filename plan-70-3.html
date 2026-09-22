@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Préparation Half-Ironman 70.3</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;background:#f0f0f0;color:#1a1a1a;line-height:1.5}
+.wrap{max-width:1200px;margin:0 auto;padding:24px}
+h1{font-size:22px;font-weight:700;margin-bottom:4px}
+h2{font-size:17px;font-weight:700;margin-bottom:6px}
+h3{font-size:14px;font-weight:600;margin-bottom:4px}
+.sub{color:#666;font-size:13px;margin-bottom:20px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.stat{background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:14px 16px;text-align:center}
+.stat-v{font-size:20px;font-weight:700}
+.stat-l{font-size:11px;color:#888;margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
+.stat-v.blue{color:#1d6ce0}
+.prog-wrap{background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.prog-bar-outer{flex:1;height:8px;background:#e8e8e8;border-radius:4px;overflow:hidden}
+.prog-bar-inner{height:100%;background:#22c55e;border-radius:4px;transition:width .3s}
+.prog-label{font-size:13px;font-weight:600;color:#15803d;white-space:nowrap}
+.prog-sub{font-size:12px;color:#888}
+.legend{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px;font-size:12px;color:#777}
+.badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:11px;font-weight:600;letter-spacing:.2px;white-space:nowrap}
+.b-NAT{background:#dbeafe;color:#1d4ed8}
+.b-VELO{background:#dcfce7;color:#15803d}
+.b-CAP{background:#fef3c7;color:#b45309}
+.b-RENFO{background:#ede9fe;color:#6d28d9}
+.b-BRICK{background:#ccfbf1;color:#0f766e}
+.b-REPOS{background:#f0f0f0;color:#888}
+hr{border:none;border-top:1px solid #ddd;margin:16px 0}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.tab{padding:6px 14px;border-radius:20px;border:1px solid #ccc;background:#fff;cursor:pointer;font-size:13px;font-weight:500;transition:all .15s;user-select:none}
+.tab:hover{border-color:#999}
+.tab.active{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.bloc-grid{display:grid;grid-template-columns:220px 1fr;gap:16px;margin-bottom:20px;align-items:start}
+.bloc-info{background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:16px}
+.bloc-phase{font-weight:600;margin-bottom:4px}
+.bloc-dates{font-size:12px;color:#666;margin-bottom:8px}
+.bloc-vol{display:inline-block;padding:3px 10px;border-radius:10px;border:1px solid #ddd;font-size:12px;color:#555;margin-bottom:10px}
+.bloc-prog{font-size:12px;color:#555;margin-top:8px}
+.bloc-prog strong{color:#15803d}
+.reset-btn{display:inline-block;padding:3px 10px;border-radius:10px;border:1px solid #ddd;font-size:12px;color:#888;background:#fff;cursor:pointer;margin-top:6px}
+.reset-btn:hover{border-color:#999;color:#333}
+.callout{border:1px solid #e0e0e0;border-radius:8px;padding:14px;background:#fafafa}
+.callout-title{font-weight:600;margin-bottom:6px;font-size:13px}
+.callout-body{font-size:13px;color:#444;line-height:1.5}
+.callout.info{background:#eff6ff;border-color:#bfdbfe}
+.callout.info .callout-title{color:#1d4ed8}
+.week-card{background:#fff;border:1px solid #e0e0e0;border-radius:8px;margin-bottom:10px;overflow:hidden}
+.week-hd{padding:11px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;gap:12px}
+.week-hd:hover{background:#fafafa}
+.week-hd-title{font-weight:600;font-size:14px;display:flex;align-items:center;gap:8px}
+.week-hd-right{display:flex;align-items:center;gap:10px;white-space:nowrap}
+.week-hd-date{font-size:12px;color:#888}
+.week-prog{font-size:12px;color:#555;font-weight:500}
+.week-prog.done{color:#15803d;font-weight:700}
+.pill{display:inline-block;padding:2px 9px;border-radius:10px;border:1px solid #ddd;font-size:11px;color:#666}
+.pill.recap{background:#dbeafe;border-color:#93c5fd;color:#1d4ed8;font-weight:600}
+.pill.done{background:#dcfce7;border-color:#86efac;color:#15803d;font-weight:600}
+.chevron{font-size:11px;color:#aaa;transition:transform .2s;display:inline-block}
+.chevron.open{transform:rotate(90deg)}
+.week-body{padding:0 16px 16px}
+.week-body.hidden{display:none}
+.recap-note{background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;padding:10px 13px;margin-bottom:12px;font-size:13px}
+.recap-note strong{color:#1d4ed8;display:block;margin-bottom:2px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+th{text-align:left;padding:7px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#888;border-bottom:1px solid #e5e5e5;font-weight:500;background:#fafafa}
+td{padding:8px 10px;border-bottom:1px solid #f0f0f0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr.done td{opacity:.42}
+tr.done .stitle{text-decoration:line-through}
+tr:nth-child(even){background:#fcfcfc}
+.day-cell{font-weight:600;font-size:13px;white-space:nowrap}
+.sub-indicator{color:#ccc;font-size:11px;padding-left:4px}
+.stitle{font-weight:500}
+.sdur{font-size:12px;color:#888;white-space:nowrap}
+.sdet{font-size:12px;color:#555;line-height:1.6}
+.sdet span{display:block}
+.sdet span::before{content:"· ";color:#bbb}
+input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:#1a1a1a;flex-shrink:0}
+.cb-cell{width:28px;text-align:center}
+@media(max-width:768px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .bloc-grid{grid-template-columns:1fr}
+  .col-det{display:none}
+}
+@media print{
+  body{background:#fff}
+  .tabs,.reset-btn,.prog-wrap,.cb-cell,.chevron{display:none!important}
+  .week-body.hidden{display:block!important}
+  .week-card{break-inside:avoid;margin-bottom:8px}
+  .wrap{padding:10px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div style="margin-bottom:20px">
+    <h1>Préparation Half-Ironman 70.3</h1>
+    <p class="sub">34 semaines · 21 septembre 2026 → 16 mai 2027 · 8 blocs de 4 semaines (3 build + 1 récup) + affûtage</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-v">34</div><div class="stat-l">Semaines</div></div>
+    <div class="stat"><div class="stat-v">~405h</div><div class="stat-l">Volume total</div></div>
+    <div class="stat"><div class="stat-v">17h</div><div class="stat-l">Semaine de pic</div></div>
+    <div class="stat"><div class="stat-v blue">16 mai 2027</div><div class="stat-l">Jour J</div></div>
+  </div>
+
+  <div class="prog-wrap">
+    <div>
+      <div style="font-weight:600;margin-bottom:2px">Progression globale</div>
+      <div class="prog-sub" id="prog-sub">0 séances cochées sur 0</div>
+    </div>
+    <div class="prog-bar-outer" style="max-width:300px">
+      <div class="prog-bar-inner" id="prog-bar" style="width:0%"></div>
+    </div>
+    <div class="prog-label" id="prog-pct">0%</div>
+  </div>
+
+  <div class="legend">
+    <strong>Légende :</strong>
+    <span class="badge b-NAT">NAT</span>
+    <span class="badge b-VELO">VÉLO</span>
+    <span class="badge b-CAP">CAP</span>
+    <span class="badge b-RENFO">RENFO</span>
+    <span class="badge b-BRICK">BRICK</span>
+    <span class="badge b-REPOS">REPOS</span>
+    <span>· Z2 = 65-75% FCmax · Z3 = 75-82% · Z4 = 82-89% (seuil) · CSS = Critical Swim Speed</span>
+  </div>
+
+  <hr>
+  <div class="tabs" id="tabs"></div>
+  <div id="bloc-content"></div>
+</div>
+
+<script>
+// =====================================================================
+// DATA
+// =====================================================================
+
+const R = (s,t,d,l) => ({sport:s,titre:t,duree:d,lignes:l});
+const REPOS = R('REPOS','Repos complet','—',['Récupération totale · foam roller 10\' ou étirements doux optionnels']);
+
+// NATATION helpers
+const natTech=(tot='~1 800m')=>R('NAT','Technique & éducatifs','1h00',[
+  'Éch: 200m libre + 4×50m éducatifs (ISO unilatéral D/G, catch-up, kick latéral)',
+  'Principal: 6×100m · focus rotation 45° + entrée de main dans l\'axe · récup 20" actif',
+  `Fin: 4×50m fingertip-drag + 100m cool-down · Total ${tot}`]);
+
+const natEndTech=(tot='~2 400m',dur='1h30')=>R('NAT','Technique + endurance',dur,[
+  'Éch: 400m libre facile',
+  'Principal: 8×100m Z2 · récup 15" · 4×50m éducatifs toutes les 2 séries',
+  `Fin: 2×200m continu Z2 + 100m cool-down · Total ${tot}`]);
+
+const natSeuil=(serie='10×100m @ CSS · récup 15"',tot='~2 200m')=>R('NAT','Seuil / allure CSS','1h00',[
+  'Éch: 400m (200m libre + 4×50m éducatifs)',
+  `Principal: ${serie}`,
+  `Fin: 200m cool-down · Total ${tot} · CSS ≈ 1\'40"-1\'55"/100m`]);
+
+const natEndSpec=(tot='~2 600m')=>R('NAT','Endurance eau libre','1h00',[
+  'Éch: 400m libre',
+  'Principal: 3×600m · virages ouverts · respiration bilatérale · sighting toutes les 10 brasses · récup 45"',
+  `Fin: 200m cool-down · Total ${tot} · Simuler conditions eau libre`]);
+
+const natLong=(serie,tot='~3 200m')=>R('NAT','Longue / allure 70.3','1h15',[
+  'Éch: 400m (200m libre + 4×50m progressifs)',
+  `Principal: ${serie}`,
+  `Fin: 200m cool-down · Total ${tot}`]);
+
+const natRecup=(tot='~700m')=>R('NAT','Récup active','30\'',
+  [`${tot} · éducatifs libres · très facile Z1 · aucune intensité`]);
+
+const natLegere=(tot='~1 200m')=>R('NAT','Technique légère','45\'',[
+  '200m libre + 6×50m éducatifs variés',
+  `4×100m très facile Z1-Z2 · récup 20" · Total ${tot} · Pas de performance`]);
+
+// VÉLO helpers
+const veloZ2=(dur,note='')=>R('VÉLO','Endurance Z2',dur,[
+  '10\' Z1 activation · cadence libre',
+  `Corps: Z2 continu · 65-75% FCmax · cadence 85-92 rpm · terrain plat${note?' · '+note:''}`,
+  '5\' Z1 retour calme · ravitaillement eau toutes les 20\'']);
+
+const veloRecup=()=>R('VÉLO','Récup très facile Z1','45\'',[
+  '45\' Z1 <65% FCmax · cadence libre · terrain plat · aucune pression',
+  'Jambes légères · pas d\'objectif de vitesse']);
+
+const veloSweetspot=(serie='3×12\'',recup='4\'')=>R('VÉLO','Sweet-spot','1h15',[
+  '10\' Z2 activation',
+  `${serie} sweet-spot · 88-93% FTP (Z3 haut-Z4) · cadence 90-95 rpm · récup ${recup} Z2`,
+  '10\' Z2 retour calme']);
+
+const veloSeuil=(serie='4×10\'')=>R('VÉLO','Seuil / intervalles Z4','1h30',[
+  '10\' Z2 activation',
+  `${serie} · Z4 (95-105% FTP) · maintenir la puissance · récup 4\' Z2 entre chaque`,
+  '15\' Z2 retour calme']);
+
+const veloLong=(dur,blocs)=>R('VÉLO','Sortie longue',dur,[
+  '45\' Z2 mise en route · terrain progressif · cadence 85-92 rpm',
+  blocs,
+  'Z2 retour calme · ravitaillement: eau 20\', gel/barre à 45\', 1h30 et 2h30']);
+
+const veloActivation=(note='')=>R('VÉLO','Activation légère','45\'',[
+  `45\' Z2 facile${note?' · '+note:''}`,
+  'Pas de blocs · terrain plat de préférence']);
+
+// CAP helpers
+const capZ2=(dur,allure='~6\'45-7\'15/km')=>R('CAP','Endurance Z2',dur,[
+  '10\' activation: marche vive + 4×30" foulées légères',
+  `Corps Z2 régulier · 65-75% FCmax · allure ${allure} · conversation fluide`,
+  '5\' retour calme en marchant · foulée légère, appui médio-pied']);
+
+const capSeuil=(serie='4×8\' Z4',ech='15\'',cd='10\'')=>R('CAP','Seuil Z4','1h00',[
+  `${ech}\' Z2 échauffement · foulées progressives`,
+  `${serie} · 82-89% FCmax · récup 2\' trot Z1 entre chaque`,
+  `${cd}\' Z2 retour calme`]);
+
+const capLong=(dur,detail)=>R('CAP','Sortie longue',dur,[
+  detail,
+  'Foulée économique · hydratation toutes les 20\' · tester gel si >1h30']);
+
+const capProg=(dur,detail)=>R('CAP','Endurance progressive',dur,[
+  detail,
+  'Ne pas forcer la progression · elle doit venir naturellement']);
+
+// RENFO helpers
+const renfoGainage=()=>R('RENFO','Gainage & bas du corps','30\'',[
+  '3×45" planche frontale · récup 30" | 3×30"/côté planche latérale · récup 30"',
+  '3×15 pont fessier + extension jambe alternée · récup 30"',
+  '3×12 fentes alternées · 2×10 pompes lentes · récup 45" entre séries']);
+
+const renfoPPG=()=>R('RENFO','PPG bas du corps','30\'',[
+  '3×15 squat goblet (KB ou haltères) · récup 45" | 3×12 fentes marchées',
+  '3×15 élévation de bassin unilatérale · 3×12 soulevé de terre jambe unique',
+  '3×20 mollets (sur marche) · 2×45" gainage frontal en fin']);
+
+const renfoLeger=()=>R('RENFO','Gainage léger','20\'',[
+  '2×45" planche frontale · 2×30" planche latérale',
+  '2×15 pont fessier · 2×10 fentes · 2×10 pompes']);
+
+// BRICK helpers
+const brickCourt=(vd,cd,vb)=>R('BRICK',`Brick vélo ${vd} -> course ${cd}`,`${vd} + ${cd}`,[
+  `Vélo ${vd}: ${vb}`,
+  'T2 <2\' · enfiler baskets sans arrêt complet · penser à la transition',
+  `Course ${cd}: démarrer Z2 (jambes lourdes = normal) · viser allure 70.3 à partir de 5\'`]);
+
+const brickLong=(vd,cd,vdet,cdet)=>R('BRICK',`Brick long vélo ${vd} -> course ${cd}`,`${vd} + ${cd}`,[
+  `Vélo ${vd}: ${vdet}`,
+  'T2 chronométrée · objectif progressif <1\'30" · transition complète',
+  `Course ${cd}: ${cdet}`]);
+
+// Récup weeks
+const recupB1=(label,dates)=>({label,dates,volume:'6h00',recuperation:true,jours:[
+  {nom:'Lun',seances:[REPOS]},
+  {nom:'Mar',seances:[natLegere('~1 000m')]},
+  {nom:'Mer',seances:[veloZ2('45\'','très facile Z1'),{sport:'RENFO',titre:'Mobilité',duree:'20\'',lignes:['Foam roller global 10\' · étirements doux hanches, ischios, épaules 10\'']}]},
+  {nom:'Jeu',seances:[{sport:'CAP',titre:'Footing léger Z1-Z2',duree:'45\'',lignes:['45\' Z1-Z2 très confortable · allure ~7\'30-8\'/km · pas d\'objectif chrono']}]},
+  {nom:'Ven',seances:[REPOS]},
+  {nom:'Sam',seances:[veloZ2('1h30','terrain plat · sortie détendue')]},
+  {nom:'Dim',seances:[capZ2('1h00','~7\'/km')]}
+]});
+
+const recupB2=(label,dates)=>({label,dates,volume:'7h00',recuperation:true,jours:[
+  {nom:'Lun',seances:[REPOS]},
+  {nom:'Mar',seances:[natLegere('~1 200m')]},
+  {nom:'Mer',seances:[veloZ2('1h00'),renfoLeger()]},
+  {nom:'Jeu',seances:[capZ2('45\'','~7\'30/km')]},
+  {nom:'Ven',seances:[REPOS]},
+  {nom:'Sam',seances:[veloZ2('1h30')]},
+  {nom:'Dim',seances:[capZ2('1h15')]}
+]});
+
+// =====================================================================
+// BLOCS DATA
+// =====================================================================
+
+const BLOCS = [
+
+// BLOC 1 — Fondations Phase 1 — S1-S4
+{id:1,phase:'Fondations & technique — Phase 1',dates:'21 sept – 19 oct 2026',volumeRange:'9h -> 10h | S4 récup 6h',
+focus:'Base aérobie Z2 pure et technique de nage. Aucune intensité. Installer les gestes (rotation, catch, respiration bilatérale) pendant que le volume est encore léger.',
+semaines:[
+  {label:'S1',dates:'21 – 27 sept',volume:'9h00',jours:[
+    {nom:'Lun',seances:[REPOS]},
+    {nom:'Mar',seances:[natTech()]},
+    {nom:'Mer',seances:[veloZ2('1h00'),renfoGainage()]},
+    {nom:'Jeu',seances:[capZ2('1h00')]},
+    {nom:'Ven',seances:[natEndTech()]},
+    {nom:'Sam',seances:[veloLong('2h15','Sortie continue Z2 · terrain roulant · garder Z2 tout le long · cadence 85-95 rpm')]},
+    {nom:'Dim',seances:[capProg('1h30','10\' activation · 1h Z2 · 20\' légèrement progressif (Z2+) · retour calme'),renfoPPG()]}
+  ]},
+  {label:'S2',dates:'28 sept – 4 oct',volume:'9h30',jours:[
+    {nom:'Lun',seances:[REPOS]},
+    {nom:'Mar',seances:[natTech('~1 900m')]},
+    {nom:'Mer',seances:[veloZ2('1h00','2×10\' terrain légèrement vallonné (rester en Z2)'),renfoGainage()]},
+    {nom:'Jeu',seances:[capZ2('1h00')]},
+    {nom:'Ven',seances:[natEndTech('~2 500m')]},
+    {nom:'Sam',seances:[veloLong('2h20','Sortie Z2 · 2×10\' terrain vallonné (rester en Z2) · Z2 retour')]},
+    {nom:'Dim',seances:[capProg('1h45','10\' activation · 1h Z2 · 25\' progressif Z2 -> Z2 soutenu · 10\' retour'),renfoPPG()]}
+  ]},
+  {label:'S3',dates:'5 – 11 oct',volume:'10h00',jours:[
+    {nom:'Lun',seances:[REPOS]},
+    {nom:'Mar',seances:[natTech('~2 000m')]},
+    {nom:'Mer',seances:[veloZ2('1h00','2×15\' Z2 soutenu (haut de Z2)'),renfoGainage()]},
+    {nom:'Jeu',seances:[capZ2('1h00')]},
+    {nom:'Ven',seances:[natEndTech('~2 600m')]},
+    {nom:'Sam',seances:[veloLong('2h30','1h Z2 plat · 2×15\' Z2 soutenu (haut de Z2) · Z2 retour')]},
+    {nom:'Dim',seances:[capProg('2h00','10\' activation · 1h Z2 · 30\' progressif Z2 -> Z3 bas · 20\' retour Z2'),renfoPPG()]}
+  ]},
+  recupB1('S4','12 – 19 oct')
+]},
+
+// BLOC 2 — Fondations Phase 2 — S5-S8
+{id:2,phase:'Fondations & technique — Phase 2',dates:'20 oct – 16 nov 2026',volumeRange:'10h -> 11h | S8 récup 7h',
+focus:'Volume aérobie en hausse · consolidation technique nage · premières montées plus longues à vélo (toujours Z2) · course longue qui dépasse 2h.',
+semaines:[
+  {label:'S5',dates:'20 – 26 oct',volume:'10h00',jours:[
+    {nom:'Lun',seances:[REPOS]},
+    {nom:'Mar',seances:[natTech('~2 000m')]},
+    {nom:'Mer',seances:[veloZ2('1h15'),renfoGainage()]},
+    {nom:'Jeu',seances:[capZ2('1h00')]},
+    {nom:'Ven',seances:[natEndTech('~2 600m')]},
+    {nom:'Sam',seances:[veloLong('2h30','Sortie Z2 continue · terrain légèrement vallonné')]},
+    {nom:'Dim',seances:[capProg('1h45','15\' activation · 1h Z2 · 20\' progressif · 10\' retour'),renfoPPG()]}
+  ]},
+  {label:'S6',dates:'27 oct – 2 nov',volume:'10h30',jours:[
+    {nom:'Lun',seances:[REPOS]},
+    {nom:'Mar',seances:[natTech('~2 100m')]},
+    {nom:'Mer',seances:[veloZ2('1h15','2×10\' légèrement plus cadencé Z2+'),renfoGainage()]},
+    {nom:'Jeu',seances:[capZ2('1h00')]},
+    {nom:'Ven',seances:[natEndTech('~2 700m')]},
+    {nom:'Sam',seances:[veloLong('2h45','45\' Z2 · 2×15\' terrain vallonné Z2 soutenu · Z2 retour')]},
+    {nom:'Dim',seances:[capProg('2h00','15\' activation · 1h15 Z2 · 25\' progressif Z2 -> Z3 bas · 10\' retour'),renfoPPG()]}
+  ]},
+  {label:'S7',dates:'3 – 9 nov',volume:'11h00',jours:[
+    {nom:'Lun',seances:[REPOS]},
+    {nom:'Mar',seances:[natTech('~2 200m')]},
+    {nom:'Mer',seances:[veloZ2('1h15','2×15\' Z2 soutenu sur terrain varié'),renfoGainage()]},
+    {nom:'Jeu',seances:[capZ2('1h15','~6\'30-7\'/km')]},
+    {nom:'Ven',seances:[natEndTech('~2 800m')]},
+    {nom:'Sam',seances:[veloLong('3h00','1h Z2 · 2×20\' Z2 soutenu terrain varié · Z2 retour')]},
+    {nom:'Dim',seances:[capProg('2h00','15\' activation · 1h20 Z2 · 25\' progressif · 10\' retour Z2'),renfoPPG()]}
+  ]},
+  recupB2('S8','10 – 16 nov')
+]},
+
+// BLOC 3 — Transition Fondations -> Base — S9-S12
+{id:3,phase:'Transition Fondations -> Base',dates:'17 nov – 14 déc 2026',volumeRange:'11h -> 12h | S12 récup 7h30',
+focus:'Introduction du sweet-spot vélo (88-93% FTP) et du seuil nage (CSS). Premières allures tempo en course. Premier brick très court (vélo 1h -> course 15\') en S11.',
+semaines:[
+  {label:'S9',dates:'17 – 23 nov',volume:'11h00',jours:[
+    {nom:'Lun',seances:[REPOS]},
+    {nom:'Mar',seances:[natSeuil('8×100m @ CSS · récup 15"','~2 000m')]},
+    {nom:'Mer',seances:[veloSweetspot('3×10\'','4\''),renfoLeger()]},
+    {nom:'Jeu',seances:[capZ2('1h00')]},
+    {nom:'Ven',seances:[natEndTech('~2 800m')]},
+    {nom:'Sam',seances:[veloLong('3h00','45\' Z2 · 2×20\' allure 70.3 Z3 (75-80% FTP) · récup 5\' · Z2 retour')]},
+    {nom:'Dim',seances:[capProg('1h45','15\' activation · 1h Z2 · 20\' allure tempo Z3 bas · 10\' retour'),renfoLeger()]}
+  ]},
+  {label:'S10',dates:'24 – 30 nov',volume:'11h30',jours:[
+    {nom:'Lun',seances:[REPOS]},
+    {nom:'Mar',seances:[natSeuil('10×100m @ CSS · récup 15"','~2 200m')]},
+    {nom:'Mer',seances:[veloSweetspot('3×12\'','4\''),renfoLeger()]},
+    {nom:'Jeu',seances:[capSeuil('3×8\' Z4')]},
+    {nom:'Ven',seances:[natEndTech('~3 000m')]},
+    {nom:'Sam',seances:[veloLong('3h00','45\' Z2 · 3×15\' allure 70.3 Z3 · récup 5\' · Z2 retour')]},
+    {nom:'Dim',seances:[capProg('2h00','15\' activation · 1h15 Z2 · 25\' allure tempo · 10\' retour'),renfoLeger()]}
+  ]},
+  {label:'S11',dates:'1 – 7 déc',volume:'12h00',jours:[
+    {nom:'Lun',seances:[REPOS]},
+    {nom:'Mar',seances:[natSeuil('5×200m @ CSS+5" · récup 30"','~2 400m')]},
+    {nom:'Mer',seances:[veloSweetspot('3×15\'','4\''),renfoLeger()]},
+    {nom:'Jeu',seances:[capSeuil('4×8\' Z4')]},
+    {nom:'Ven',seances:[natEndTech('~3 000m')]},
+    {nom:'Sam',seances:[brickCourt('1h00','15\'','10\' Z2 · 40\' allure 70.3 Z3 · 10\' Z2 — 1er brick !')]},
+    {nom:'Dim',seances:[capProg('2h00','15\' activation · 1h20 Z2 · 25\' allure tempo · 10\' retour'),renfoPPG()]}
+  ]},
+  {label:'S12',dates:'8 – 14 déc',volume:'7h30',recuperation:true,jours:[
+    {nom:'Lun',seances:[REPOS]},
+    {nom:'Mar',seances:[natLegere('~1 200m')]},
+    {nom:'Mer',seances:[veloZ2('1h00'),renfoLeger()]},
+    {nom:'Jeu',seances:[capZ2('45\'','~7\'/km')]},
+    {nom:'Ven',seances:[REPOS]},
+    {nom:'Sam',seances:[veloZ2('1h45','détendue Z2 facile')]},
+    {nom:'Dim',seances:[capZ2('1h15')]}
+  ]}
+]},
+
+// BLOC 4 — Base Volume — S13-S16
+{id:4,phase:'Base / Volume',dates:'15 déc 2026 – 11 jan 2027',volumeRange:'12h30 -> 13h30 | S16 récup 8h',
+focus:'Sweet-spot vélo consolidé (3-4×12-15\'). Seuil natation 10×100m ou 5-6×200m @ CSS. Seuil course 4-5×8\' Z4. Brick (vélo 1h15 -> course 20\') en S15.',
+semaines:[
+  {label:'S13',dates:'15 – 21 déc',volume:'12h30',jours:[
+    {nom:'Lun',seances:[veloRecup()]},
+    {nom:'Mar',seances:[natSeuil('10×100m @ CSS · récup 15"','~2 200m')]},
+    {nom:'Mer',seances:[veloSweetspot('3×12\' 88-93% FTP','4\''),renfoLeger()]},
+    {nom:'Jeu',seances:[capSeuil('4×8\' Z4','15\'','10\'')]},
+    {nom:'Ven',seances:[natEndTech('~3 000m')]},
+    {nom:'Sam',seances:[veloLong('3h00','45\' Z2 · 2×25\' allure 70.3 Z3 · récup 5\' · Z2 retour')]},
+    {nom:'Dim',seances:[capLong('1h30','15\' activation · 1h Z2 · 15\' allure 70.3 Z3 bas · 10\' retour'),renfoLeger()]}
+  ]},
+  {label:'S14',dates:'22 – 28 déc',volume:'13h00',jours:[
+    {nom:'Lun',seances:[veloRecup()]},
+    {nom:'Mar',seances:[natSeuil('4×(3×100m @ CSS · récup 15") · 2\' entre blocs','~2 400m')]},
+    {nom:'Mer',seances:[veloSweetspot('3×15\'','4\''),renfoLeger()]},
+    {nom:'Jeu',seances:[capSeuil('5×7\' Z4','15\'','10\'')]},
+    {nom:'Ven',seances:[natEndTech('~3 200m')]},
+    {nom:'Sam',seances:[veloLong('3h15','45\' Z2 · 3×20\' allure 70.3 Z3 · récup 5\' · Z2 retour')]},
+    {nom:'Dim',seances:[capLong('1h45','15\' activation · 1h15 Z2 · 20\' allure 70.3 Z3 bas · 10\' retour'),renfoLeger()]}
+  ]},
+  {label:'S15',dates:'29 déc – 4 jan',volume:'13h30',jours:[
+    {nom:'Lun',seances:[veloRecup()]},
+    {nom:'Mar',seances:[natSeuil('6×200m @ CSS+5" · récup 30"','~2 600m')]},
+    {nom:'Mer',seances:[veloSweetspot('4×12\'','3\'30"'),renfoLeger()]},
+    {nom:'Jeu',seances:[capSeuil('4×10\' Z4','15\'','10\'')]},
+    {nom:'Ven',seances:[natEndTech('~3 200m')]},
+    {nom:'Sam',seances:[brickCourt('1h15','20\'','10\' Z2 · 55\' allure 70.3 Z3 · 15\' Z2')]},
+    {nom:'Dim',seances:[capLong('2h00','15\' activation · 1h20 Z2 · 20\' allure 70.3 · 10\' retour'),renfoPPG()]}
+  ]},
+  {label:'S16',dates:'5 – 11 jan',volume:'8h00',recuperation:true,jours:[
+    {nom:'Lun',seances:[REPOS]},
+    {nom:'Mar',seances:[R('NAT','Technique facile','45\'',['400m éch · 6×100m allure facile Z2 · 4×50m éducatifs · 200m CD · Total ~1 400m'])]},
+    {nom:'Mer',seances:[veloZ2('1h15','facile Z2'),renfoLeger()]},
+    {nom:'Jeu',seances:[capZ2('1h00')]},
+    {nom:'Ven',seances:[REPOS]},
+    {nom:'Sam',seances:[veloZ2('1h45')]},
+    {nom:'Dim',seances:[capZ2('1h15')]}
+  ]}
+]},
+
+// BLOC 5 — Base -> Build — S17-S20
+{id:5,phase:'Base -> Build spécifique',dates:'12 jan – 8 fév 2027',volumeRange:'14h -> 15h | S20 récup 9h',
+focus:'Brick hebdomadaire le jeudi (vélo 1h + course 20\'). Sortie vélo longue monte à 3h30-3h45. Course longue 1h45-2h. Introduction Z4 vélo (seuil).',
+semaines:[
+  {label:'S17',dates:'12 – 18 jan',volume:'14h00',jours:[
+    {nom:'Lun',seances:[natRecup()]},
+    {nom:'Mar',seances:[natSeuil('10×100m @ CSS · récup 15"','~2 400m')]},
+    {nom:'Mer',seances:[veloSweetspot('3×15\' 88-93% FTP','4\''),renfoLeger()]},
+    {nom:'Jeu',seances:[brickCourt('1h00','20\'','10\' Z2 · 40\' allure 70.3 Z3 · 10\' Z2')]},
+    {nom:'Ven',seances:[natEndSpec('~2 600m')]},
+    {nom:'Sam',seances:[veloLong('3h30','45\' Z2 · 3×20\' allure 70.3 Z3 · récup 5\' · Z2 retour')]},
+    {nom:'Dim',seances:[capLong('1h45','15\' activation · 1h15 Z2 · 20\' allure 70.3 · 10\' retour'),renfoLeger()]}
+  ]},
+  {label:'S18',dates:'19 – 25 jan',volume:'14h30',jours:[
+    {nom:'Lun',seances:[natRecup()]},
+    {nom:'Mar',seances:[natSeuil('5×200m @ CSS+5" · récup 30"','~2 400m')]},
+    {nom:'Mer',seances:[veloSweetspot('4×12\'','3\'30"'),renfoLeger()]},
+    {nom:'Jeu',seances:[brickCourt('1h00','20\'','10\' Z2 · 40\' allure 70.3 · 10\' Z2')]},
+    {nom:'Ven',seances:[natEndSpec('~2 800m')]},
+    {nom:'Sam',seances:[veloLong('3h30','45\' Z2 · 4×15\' allure 70.3 Z3 · récup 5\' · Z2 retour')]},
+    {nom:'Dim',seances:[capLong('2h00','15\' activation · 1h30 Z2 · 20\' allure 70.3 · 10\' retour'),renfoLeger()]}
+  ]},
+  {label:'S19',dates:'26 jan – 1er fév',volume:'15h00',jours:[
+    {nom:'Lun',seances:[natRecup()]},
+    {nom:'Mar',seances:[natSeuil('3×(4×100m @ CSS · récup 15") · 2\' entre blocs','~2 600m')]},
+    {nom:'Mer',seances:[veloSeuil('3×10\''),renfoLeger()]},
+    {nom:'Jeu',seances:[brickCourt('1h15','20\'','10\' Z2 · 55\' allure 70.3 · 10\' Z2')]},
+    {nom:'Ven',seances:[natEndSpec('~3 000m')]},
+    {nom:'Sam',seances:[veloLong('3h45','45\' Z2 · 3×25\' allure 70.3 Z3 · récup 5\' · Z2 retour')]},
+    {nom:'Dim',seances:[capLong('2h00','15\' activation · 1h30 Z2 · 20\' allure 70.3 · 10\' retour'),renfoPPG()]}
+  ]},
+  {label:'S20',dates:'2 – 8 fév',volume:'9h00',recuperation:true,jours:[
+    {nom:'Lun',seances:[REPOS]},
+    {nom:'Mar',seances:[R('NAT','Technique facile','45\'',['400m éch · 6×100m facile Z2 · 4×50m éducatifs · 200m CD · Total ~1 400m'])]},
+    {nom:'Mer',seances:[veloZ2('1h15'),renfoLeger()]},
+    {nom:'Jeu',seances:[capZ2('1h00')]},
+    {nom:'Ven',seances:[REPOS]},
+    {nom:'Sam',seances:[veloZ2('2h00','facile · pas de blocs d\'intensité')]},
+    {nom:'Dim',seances:[capZ2('1h15')]}
+  ]}
+]},
+
+// BLOC 6 — Build spécifique + Course Test — S21-S24
+{id:6,phase:'Build spécifique + Course Test',dates:'9 fév – 8 mars 2027',volumeRange:'15h -> 16h | S24 récup 9h + course test',
+focus:'Allure 70.3 sur chaque discipline. Brick long (vélo 3h -> course 40\') toutes les 2 semaines. Course test sprint ou M en S24 pour valider matériel, transitions et nutrition.',
+semaines:[
+  {label:'S21',dates:'9 – 15 fév',volume:'15h00',jours:[
+    {nom:'Lun',seances:[natRecup()]},
+    {nom:'Mar',seances:[natSeuil('6×200m @ CSS+5" · récup 20"','~2 800m')]},
+    {nom:'Mer',seances:[veloSeuil('3×12\''),renfoLeger()]},
+    {nom:'Jeu',seances:[brickCourt('1h15','25\'','10\' Z2 · 55\' allure 70.3 Z3 · 10\' Z2')]},
+    {nom:'Ven',seances:[natEndSpec('~3 000m')]},
+    {nom:'Sam',seances:[brickLong('3h00','40\'','45\' Z2 · 2×30\' allure 70.3 · 15\' CD','15\' Z2 (jambes lourdes) -> 20\' allure 70.3 -> 5\' retour')]},
+    {nom:'Dim',seances:[capZ2('1h00','récup active post-brick')]}
+  ]},
+  {label:'S22',dates:'16 – 22 fév',volume:'15h30',jours:[
+    {nom:'Lun',seances:[natRecup()]},
+    {nom:'Mar',seances:[natSeuil('3×(4×100m @ CSS · récup 15") · 2\' entre blocs','~2 800m')]},
+    {nom:'Mer',seances:[veloSeuil('4×10\''),renfoLeger()]},
+    {nom:'Jeu',seances:[brickCourt('1h15','25\'','10\' Z2 · 55\' allure 70.3 · 10\' Z2')]},
+    {nom:'Ven',seances:[natEndSpec('~3 000m')]},
+    {nom:'Sam',seances:[veloLong('3h30','45\' Z2 · 3×30\' allure 70.3 Z3 · récup 5\' · Z2 retour')]},
+    {nom:'Dim',seances:[capLong('2h00','15\' activation · 1h30 Z2 · 20\' allure 70.3 · 10\' retour'),renfoLeger()]}
+  ]},
+  {label:'S23',dates:'23 fév – 1er mars',volume:'16h00',jours:[
+    {nom:'Lun',seances:[natRecup()]},
+    {nom:'Mar',seances:[natLong('4×600m @ allure cible 70.3 · récup 45"','~3 200m')]},
+    {nom:'Mer',seances:[veloSeuil('4×12\''),renfoLeger()]},
+    {nom:'Jeu',seances:[brickCourt('1h30','30\'','15\' Z2 · 1h allure 70.3 · 15\' Z2')]},
+    {nom:'Ven',seances:[natEndSpec('~3 000m')]},
+    {nom:'Sam',seances:[brickLong('3h30','45\'','45\' Z2 · 2h15 allure 70.3 · 15\' CD · ravitaillement identique J-course','15\' Z2 -> 25\' allure 70.3 -> 5\' Z2 retour · T2 <1\'30"')]},
+    {nom:'Dim',seances:[capZ2('1h00','récup post-brick')]}
+  ]},
+  {label:'S24',dates:'2 – 8 mars',volume:'9h + course test',recuperation:true,jours:[
+    {nom:'Lun',seances:[REPOS]},
+    {nom:'Mar',seances:[R('NAT','Activation pré-course','45\'',['400m éch · 8×100m @ allure 70.3 facile · 4×50m éducatifs · 200m CD · Total ~1 600m'])]},
+    {nom:'Mer',seances:[veloActivation('2×3\' @ allure 70.3 · garder les jambes réactives'),renfoLeger()]},
+    {nom:'Jeu',seances:[R('CAP','Activation légère','30\'',['30\' Z1-Z2 facile · 4×30" strides @ allure course · 5\' marche retour'])]},
+    {nom:'Ven',seances:[R('NAT','Activation pré-course','20\'',['500m très facile · test combinaison · reconnaissance zone nage si possible'])]},
+    {nom:'Sam',seances:[REPOS]},
+    {nom:'Dim',seances:[R('BRICK','COURSE TEST — Sprint ou M','~2-3h',['Triathlon sprint ou M · validation matériel, transitions T1/T2, allures','Tester stratégie nutrition exacte (gels, barres, eau) · noter sensations et temps de transition','Objectif: apprendre et valider · pas de performance max'])]}
+  ]}
+]},
+
+// BLOC 7 — Build Intensification — S25-S28
+{id:7,phase:'Build spécifique — intensification',dates:'9 mars – 5 avr 2027',volumeRange:'15h30 -> 16h30 | S28 récup 10h',
+focus:'Pic de volume vélo (4h en S26-S27). Course longue 2h. Bricks longs toutes les semaines. Allure 70.3 bien consolidée sur chaque discipline.',
+semaines:[
+  {label:'S25',dates:'9 – 15 mars',volume:'15h30',jours:[
+    {nom:'Lun',seances:[natRecup('~700m — récup après course test')]},
+    {nom:'Mar',seances:[natSeuil('8×200m @ CSS · récup 20"','~3 000m')]},
+    {nom:'Mer',seances:[veloSeuil('4×12\''),renfoLeger()]},
+    {nom:'Jeu',seances:[brickCourt('1h30','30\'','15\' Z2 · 1h allure 70.3 · 15\' Z2')]},
+    {nom:'Ven',seances:[natEndSpec('~3 000m')]},
+    {nom:'Sam',seances:[brickLong('3h30','45\'','45\' Z2 · 2h15 allure 70.3 · 15\' CD · tester nutrition J-course','15\' Z2 -> 25\' allure 70.3 -> 5\' retour · T2 <1\'30"')]},
+    {nom:'Dim',seances:[capZ2('1h15','récup active post-brick')]}
+  ]},
+  {label:'S26',dates:'16 – 22 mars',volume:'16h00',jours:[
+    {nom:'Lun',seances:[natRecup()]},
+    {nom:'Mar',seances:[natLong('4×700m @ allure 70.3 · récup 45"','~3 400m')]},
+    {nom:'Mer',seances:[veloSeuil('5×10\''),renfoLeger()]},
+    {nom:'Jeu',seances:[brickCourt('1h30','30\'','15\' Z2 · 1h allure 70.3 · 15\' Z2')]},
+    {nom:'Ven',seances:[natEndSpec('~3 200m')]},
+    {nom:'Sam',seances:[veloLong('4h00','45\' Z2 · 3×30\' allure 70.3 Z3 · récup 5\' · Z2 retour · ravitaillement toutes les 45\'')]},
+    {nom:'Dim',seances:[capLong('2h00','15\' activation · 1h30 Z2 · 20\' allure 70.3 · 10\' retour'),renfoLeger()]}
+  ]},
+  {label:'S27',dates:'23 – 29 mars',volume:'16h30',jours:[
+    {nom:'Lun',seances:[natRecup()]},
+    {nom:'Mar',seances:[natLong('5×600m @ allure 70.3 · récup 40"','~3 600m')]},
+    {nom:'Mer',seances:[veloSeuil('5×12\''),renfoLeger()]},
+    {nom:'Jeu',seances:[brickCourt('1h30','30\'','15\' Z2 · 1h allure 70.3 · 15\' Z2')]},
+    {nom:'Ven',seances:[natEndSpec('~3 200m')]},
+    {nom:'Sam',seances:[brickLong('4h00','45\'','45\' Z2 · 2h45 allure 70.3 · 15\' CD · ravitaillement J-course exact','15\' Z2 -> 25\' allure 70.3 -> 5\' retour · T2 <1\'30"')]},
+    {nom:'Dim',seances:[capZ2('1h15','récup active')]}
+  ]},
+  {label:'S28',dates:'30 mars – 5 avr',volume:'10h00',recuperation:true,jours:[
+    {nom:'Lun',seances:[REPOS]},
+    {nom:'Mar',seances:[R('NAT','Technique facile','45\'',['400m éch · 8×100m allure confort Z2 · 4×50m éducatifs · 200m CD · Total ~1 600m'])]},
+    {nom:'Mer',seances:[veloZ2('1h30'),renfoLeger()]},
+    {nom:'Jeu',seances:[capZ2('1h00')]},
+    {nom:'Ven',seances:[REPOS]},
+    {nom:'Sam',seances:[veloZ2('2h00')]},
+    {nom:'Dim',seances:[capZ2('1h30')]}
+  ]}
+]},
+
+// BLOC 8 — Pic + Affûtage Phase 1 — S29-S32
+{id:8,phase:'Pic de charge + Affûtage Phase 1',dates:'6 avr – 3 mai 2027',volumeRange:'17h (pic) -> 12h (-30%) -> 9h (-45%)',
+focus:'Deux semaines de pic maximum. Puis réduction progressive: -30% en S31 (intensité maintenue), -45% en S32. Commencer à valider la liste matériel.',
+semaines:[
+  {label:'S29',dates:'6 – 12 avr',volume:'17h00',jours:[
+    {nom:'Lun',seances:[natRecup()]},
+    {nom:'Mar',seances:[natLong('5×700m @ allure 70.3 · récup 40"','~3 800m')]},
+    {nom:'Mer',seances:[veloSeuil('5×12\''),renfoLeger()]},
+    {nom:'Jeu',seances:[brickCourt('1h30','30\'','15\' Z2 · 1h allure 70.3 · 15\' Z2')]},
+    {nom:'Ven',seances:[natEndSpec('~3 200m')]},
+    {nom:'Sam',seances:[brickLong('4h00','45\'','45\' Z2 · 3h allure 70.3 · 15\' CD · TESTER nutrition et hydratation J-course exactes','15\' Z2 -> 25\' allure 70.3 -> 5\' retour · T2 <1\'30"')]},
+    {nom:'Dim',seances:[capLong('2h00','15\' activation · 1h30 Z2 · 20\' allure 70.3 · 10\' retour'),renfoLeger()]}
+  ]},
+  {label:'S30',dates:'13 – 19 avr',volume:'17h00',jours:[
+    {nom:'Lun',seances:[natRecup()]},
+    {nom:'Mar',seances:[natLong('2×1 900m continu @ allure 70.3 · récup 1\'30" — simulation distance course','~4 200m')]},
+    {nom:'Mer',seances:[veloSeuil('4×12\''),renfoLeger()]},
+    {nom:'Jeu',seances:[brickCourt('1h30','30\'','15\' Z2 · 1h allure 70.3 · 15\' Z2')]},
+    {nom:'Ven',seances:[natEndSpec('~3 200m')]},
+    {nom:'Sam',seances:[veloLong('4h00','45\' Z2 · 3×35\' allure 70.3 · récup 5\' · Z2 retour — dernière grande sortie vélo')]},
+    {nom:'Dim',seances:[capLong('2h00','15\' activation · 1h30 Z2 · 20\' allure 70.3 · 10\' retour — dernière longue course'),renfoPPG()]}
+  ]},
+  {label:'S31',dates:'20 – 26 avr',volume:'12h00',jours:[
+    {nom:'Lun',seances:[REPOS]},
+    {nom:'Mar',seances:[R('NAT','Allure 70.3 courte','45\'',['400m éch · 5×300m @ allure 70.3 · récup 30" · 200m CD · Total ~2 100m · Fraîcheur > Volume'])]},
+    {nom:'Mer',seances:[veloSweetspot('2×12\' sweet-spot','4\''),renfoLeger()]},
+    {nom:'Jeu',seances:[R('CAP','Seuil court -30%','50\'',['15\' Z2 · 3×8\' Z4 · récup 2\' · 10\' Z2 · maintien intensité, baisse volume'])]},
+    {nom:'Ven',seances:[R('NAT','Endurance courte','45\'',['400m éch · 6×200m @ allure 70.3 · récup 20" · 200m CD · Total ~2 000m'])]},
+    {nom:'Sam',seances:[veloLong('2h45','45\' Z2 · 2×20\' allure 70.3 · récup 5\' · Z2 retour — -30% vs pic')]},
+    {nom:'Dim',seances:[capLong('1h30','10\' activation · 1h Z2 · 20\' allure 70.3 · retour — -25% vs pic')]}
+  ]},
+  {label:'S32',dates:'27 avr – 3 mai',volume:'9h00',jours:[
+    {nom:'Lun',seances:[REPOS]},
+    {nom:'Mar',seances:[R('NAT','Réveil musculaire','40\'',['400m éch · 4×200m @ allure 70.3 · 200m CD · Total ~1 600m · Légèreté'])]},
+    {nom:'Mer',seances:[R('VÉLO','Réveil musculaire','45\'',['10\' Z1 · 2×8\' sweet-spot · récup 3\' · 10\' Z2 · court et ciblé']),renfoLeger()]},
+    {nom:'Jeu',seances:[R('CAP','Réveil musculaire','45\'',['15\' Z2 · 3×6\' Z4 · récup 2\' · 10\' Z2 · maintien réactivité neuromusculaire'])]},
+    {nom:'Ven',seances:[R('NAT','Technique courte','35\'',['300m éch · 4×200m @ allure 70.3 · 200m CD · Total ~1 400m'])]},
+    {nom:'Sam',seances:[veloLong('2h00','45\' Z2 · 2×15\' allure 70.3 · récup 5\' · Z2 retour — -50% vs pic')]},
+    {nom:'Dim',seances:[capZ2('1h15','~6\'45/km · garder les jambes légères')]}
+  ]}
+]},
+
+// AFFÛTAGE FINAL — S33-S34
+{id:9,phase:'Affûtage final & Course',dates:'4 – 17 mai 2027',volumeRange:'S33: 6h (-65%) · S34: 5h + COURSE 16 mai',
+focus:'Fraîcheur maximale. Aucune fatigue accumulée. Réveils musculaires très courts sur les 3 sports. Logistique, sommeil, nutrition. Rien de nouveau le jour J.',
+semaines:[
+  {label:'S33',dates:'4 – 10 mai',volume:'6h00',jours:[
+    {nom:'Lun',seances:[REPOS]},
+    {nom:'Mar',seances:[R('NAT','Réveil musculaire court','30\'',['300m éch · 3×200m @ allure 70.3 · 200m CD · Total ~1 200m · Focus: fluidité et glisse'])]},
+    {nom:'Mer',seances:[R('VÉLO','Activation courte','45\'',['10\' Z1 · 1×10\' allure 70.3 · 2×3\' légèrement plus vif · 10\' Z2 · garder la vivacité']),renfoLeger()]},
+    {nom:'Jeu',seances:[R('CAP','Activation légère','40\'',['15\' Z2 · 4×3\' @ allure 70.3 · récup 90" · 10\' Z2 · Jambes réactives, pas fatiguées'])]},
+    {nom:'Ven',seances:[R('NAT','Très facile','25\'',['~800m total très facile · éducatifs · sensation de glisse · aucun effort'])]},
+    {nom:'Sam',seances:[R('VÉLO','Sortie légère + check matériel','1h00',['45\' Z2 très facile · contrôle vélo: transmission, pneus, cale-pieds, compteur','5\' course à pied pour test transition T1/T2 · vérifier équipement sac'])]},
+    {nom:'Dim',seances:[R('CAP','Footing facile','45\'',['45\' Z2 très confortable · ~7\'/km · focus: sommeil ce soir, hydratation++, repas testé'])]}
+  ]},
+  {label:'S34',dates:'11 – 17 mai',volume:'5h + COURSE',jours:[
+    {nom:'Lun',seances:[R('NAT','Entretien léger','30\'',['~1 000m · éducatifs + quelques 100m @ allure · légèreté totale'])]},
+    {nom:'Mar',seances:[R('VÉLO','Entretien léger','30\'',['30\' Z1-Z2 · terrain plat · 2×2\' allure 70.3 · garder les sensations'])]},
+    {nom:'Mer',seances:[R('CAP','Entretien léger','30\'',['30\' Z2 facile · 4×20" strides @ allure cible · 5\' marche retour'])]},
+    {nom:'Jeu',seances:[REPOS]},
+    {nom:'Ven',seances:[R('REPOS','Repos + logistique','—',['Préparation sacs T1 et T2 · liste de contrôle matériel · reconnaissance parcours · SOMMEIL++'])]},
+    {nom:'Sam',seances:[R('BRICK','Activations pré-course','20\' total',['Vélo 10\' très facile · 2×1\' allure course · Course 5\' très facile · 2×30" strides','Nage 5\' facile si possible · Focus: calme et visualisation du parcours'])]},
+    {nom:'Dim',seances:[R('BRICK','COURSE — 70.3 · 16 MAI 2027','~5-6h',['Nage 1 900m · Vélo 90 km · Course 21,1 km · T1 + T2','Partir conservateur sur le vélo · tenir l\'allure cible en course','Nutrition: plan validé à l\'entraînement · rien de nouveau · PROFITER !'])]}
+  ]}
+]}
+
+]; // end BLOCS
+
+// =====================================================================
+// STATE (localStorage)
+// =====================================================================
+const STORAGE_KEY = 'plan703_checked';
+let checked = {};
+try { checked = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'); } catch(e){}
+
+function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(checked)); }
+function sKey(sl,jn,si){ return `${sl}__${jn}__${si}`; }
+
+// =====================================================================
+// RENDERING
+// =====================================================================
+let currentBlocId = 1;
+
+function sportClass(s){ return 'b-'+s.replace('É','E').replace('VÉLO','VELO'); }
+function sportLabel(s){ return s==='VÉLO'?'VÉLO':s; }
+
+function totalSessions(){
+  let t=0;
+  BLOCS.forEach(b=>b.semaines.forEach(s=>s.jours.forEach(j=>t+=j.seances.length)));
+  return t;
+}
+
+function doneCount(){
+  return Object.values(checked).filter(Boolean).length;
+}
+
+function updateProgress(){
+  const total = totalSessions();
+  const done = doneCount();
+  const pct = total>0?Math.round(done/total*100):0;
+  document.getElementById('prog-sub').textContent = `${done} séances cochées sur ${total}`;
+  document.getElementById('prog-bar').style.width = pct+'%';
+  document.getElementById('prog-pct').textContent = pct+'%';
+}
+
+function renderWeek(s, blocId){
+  let totalS=0, doneS=0;
+  s.jours.forEach(j=>j.seances.forEach((_,si)=>{
+    totalS++;
+    if(checked[sKey(s.label,j.nom,si)]) doneS++;
+  }));
+  const allDone = doneS===totalS;
+  const isRecap = !!s.recuperation;
+  const weekId = `week-${blocId}-${s.label}`;
+  const bodyId = `body-${blocId}-${s.label}`;
+  const defaultOpen = !isRecap;
+
+  let pillHtml = isRecap
+    ? `<span class="pill recap">RÉCUPÉRATION</span>`
+    : allDone
+      ? `<span class="pill done">Terminée !</span>`
+      : `<span class="pill">${s.volume}</span>`;
+
+  let progClass = allDone ? 'week-prog done' : 'week-prog';
+  let progText = `${doneS}/${totalS} séances`;
+
+  let rows = '';
+  s.jours.forEach(jour=>{
+    jour.seances.forEach((sess,si)=>{
+      const key = sKey(s.label, jour.nom, si);
+      const isDone = !!checked[key];
+      const doneClass = isDone ? 'done' : '';
+      const dayCell = si===0
+        ? `<td class="day-cell">${jour.nom}</td>`
+        : `<td><span class="sub-indicator">+</span></td>`;
+      const sportBadge = `<span class="badge ${sportClass(sess.sport)}">${sportLabel(sess.sport)}</span>`;
+      const details = sess.lignes.map(l=>`<span>${l}</span>`).join('');
+      rows += `<tr class="${doneClass}" data-key="${key}">
+        <td class="cb-cell"><input type="checkbox" ${isDone?'checked':''} onchange="toggleSession('${key}','${blocId}','${s.label}')" /></td>
+        ${dayCell}
+        <td>${sportBadge}</td>
+        <td class="stitle">${sess.titre}</td>
+        <td class="sdur">${sess.duree}</td>
+        <td class="sdet col-det">${details}</td>
+      </tr>`;
+    });
+  });
+
+  const recapNote = isRecap ? `
+    <div class="recap-note">
+      <strong>Volume -40 à -50% · Intensité supprimée</strong>
+      Laisser les adaptations physiologiques se consolider. Réduire encore si fatigue persistante. Sommeil et nutrition au premier plan.
+    </div>` : '';
+
+  return `
+  <div class="week-card" id="${weekId}">
+    <div class="week-hd" onclick="toggleWeek('${bodyId}','${weekId}')">
+      <div class="week-hd-title">
+        <span class="chevron ${defaultOpen?'open':''}" id="chev-${bodyId}">&#9654;</span>
+        ${s.label}${isRecap?' — Semaine de récupération':' · '+s.volume}
+      </div>
+      <div class="week-hd-right">
+        <span class="${progClass}" id="prog-${s.label}-${blocId}">${progText}</span>
+        <span class="week-hd-date">${s.dates}</span>
+        ${pillHtml}
+      </div>
+    </div>
+    <div class="week-body ${defaultOpen?'':'hidden'}" id="${bodyId}">
+      ${recapNote}
+      <table>
+        <thead><tr>
+          <th></th><th>Jour</th><th>Sport</th><th>Séance</th><th>Durée</th>
+          <th class="col-det">Structure & détails</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+function renderBloc(bloc){
+  let blocTotalS=0, blocDoneS=0;
+  bloc.semaines.forEach(s=>s.jours.forEach(j=>j.seances.forEach((_,si)=>{
+    blocTotalS++;
+    if(checked[sKey(s.label,j.nom,si)]) blocDoneS++;
+  })));
+
+  const weeksHtml = bloc.semaines.map(s=>renderWeek(s,bloc.id)).join('');
+  const resetBtn = blocDoneS>0
+    ? `<button class="reset-btn" onclick="resetBloc(${bloc.id})">Remettre à zéro ce bloc</button>`
+    : '';
+
+  return `
+  <div class="bloc-grid">
+    <div class="bloc-info">
+      <h2>${bloc.id<=8?'Bloc '+bloc.id+' / 8':'Affûtage final'}</h2>
+      <div class="bloc-phase">${bloc.phase}</div>
+      <div class="bloc-dates">${bloc.dates}</div>
+      <span class="bloc-vol">${bloc.volumeRange}</span>
+      <div class="bloc-prog"><strong>${blocDoneS}</strong> / ${blocTotalS} séances cochées ce bloc</div>
+      ${resetBtn}
+    </div>
+    <div class="callout">
+      <div class="callout-title">Objectif du bloc</div>
+      <div class="callout-body">${bloc.focus}</div>
+    </div>
+  </div>
+  <div>${weeksHtml}</div>`;
+}
+
+function renderTabs(){
+  const tabs = document.getElementById('tabs');
+  tabs.innerHTML = BLOCS.map(b=>`
+    <div class="tab ${b.id===currentBlocId?'active':''}"
+         onclick="switchBloc(${b.id})">
+      ${b.id<=8?'Bloc '+b.id:'Affûtage + Course'}
+    </div>`).join('');
+}
+
+function renderBlocContent(){
+  const bloc = BLOCS.find(b=>b.id===currentBlocId);
+  document.getElementById('bloc-content').innerHTML = renderBloc(bloc);
+}
+
+function render(){
+  renderTabs();
+  renderBlocContent();
+  updateProgress();
+}
+
+// =====================================================================
+// INTERACTIONS
+// =====================================================================
+function switchBloc(id){
+  currentBlocId = id;
+  render();
+}
+
+function toggleWeek(bodyId, weekId){
+  const body = document.getElementById(bodyId);
+  const chev = document.getElementById('chev-'+bodyId);
+  body.classList.toggle('hidden');
+  chev.classList.toggle('open');
+}
+
+function toggleSession(key, blocId, semLabel){
+  checked[key] = !checked[key];
+  saveState();
+  // Update the row visually
+  const row = document.querySelector(`tr[data-key="${key}"]`);
+  if(row){
+    row.classList.toggle('done', !!checked[key]);
+    const cb = row.querySelector('input[type=checkbox]');
+    if(cb) cb.checked = !!checked[key];
+  }
+  // Update week progress
+  updateWeekProg(blocId, semLabel);
+  // Update bloc info
+  renderBlocInfo(parseInt(blocId));
+  // Update global progress
+  updateProgress();
+}
+
+function updateWeekProg(blocId, semLabel){
+  const bloc = BLOCS.find(b=>b.id===parseInt(blocId));
+  if(!bloc) return;
+  const sem = bloc.semaines.find(s=>s.label===semLabel);
+  if(!sem) return;
+  let total=0,done=0;
+  sem.jours.forEach(j=>j.seances.forEach((_,si)=>{
+    total++;
+    if(checked[sKey(sem.label,j.nom,si)]) done++;
+  }));
+  const el = document.getElementById(`prog-${semLabel}-${blocId}`);
+  if(el){
+    el.textContent = `${done}/${total} séances`;
+    el.className = done===total ? 'week-prog done' : 'week-prog';
+  }
+  // Update pill
+  const weekCard = document.getElementById(`week-${blocId}-${semLabel}`);
+  if(weekCard && !sem.recuperation){
+    const pill = weekCard.querySelector('.week-hd-right .pill');
+    if(pill){
+      if(done===total){ pill.className='pill done'; pill.textContent='Terminée !'; }
+      else { pill.className='pill'; pill.textContent=sem.volume; }
+    }
+  }
+}
+
+function renderBlocInfo(blocId){
+  const bloc = BLOCS.find(b=>b.id===blocId);
+  if(!bloc) return;
+  let total=0,done=0;
+  bloc.semaines.forEach(s=>s.jours.forEach(j=>j.seances.forEach((_,si)=>{
+    total++;
+    if(checked[sKey(s.label,j.nom,si)]) done++;
+  })));
+  const progEl = document.querySelector('.bloc-prog');
+  if(progEl) progEl.innerHTML = `<strong>${done}</strong> / ${total} séances cochées ce bloc`;
+  // Update reset button
+  const blocInfo = document.querySelector('.bloc-info');
+  if(blocInfo){
+    const existing = blocInfo.querySelector('.reset-btn');
+    if(done>0 && !existing){
+      const btn = document.createElement('button');
+      btn.className='reset-btn'; btn.textContent='Remettre à zéro ce bloc';
+      btn.onclick=()=>resetBloc(blocId);
+      blocInfo.appendChild(btn);
+    } else if(done===0 && existing){
+      existing.remove();
+    }
+  }
+}
+
+function resetBloc(blocId){
+  const bloc = BLOCS.find(b=>b.id===blocId);
+  if(!bloc) return;
+  bloc.semaines.forEach(s=>s.jours.forEach((j,ji)=>j.seances.forEach((_,si)=>{
+    delete checked[sKey(s.label,j.nom,si)];
+  })));
+  saveState();
+  render();
+}
+
+// =====================================================================
+// INIT
+// =====================================================================
+render();
+</script>
+</body>
+</html>
